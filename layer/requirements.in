@@ -1,0 +1,4 @@
+aws-lambda-powertools ~= 2.15
+benchling-sdk ~= 1.6
+jinja2 ~= 3.1
+quilt3 ~= 5.3
