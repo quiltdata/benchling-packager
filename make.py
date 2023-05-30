@@ -139,10 +139,18 @@ def make_template(*, metadata: dict) -> troposphere.Template:
                             "Action": "secretsmanager:GetSecretValue",
                             "Resource": benchling_client_secret.ref(),
                         },
-                        # FIXME
                         {
                             "Effect": "Allow",
-                            "Action": "s3:*",
+                            "Action": [
+                                "s3:GetObject",
+                                "s3:GetObjectTagging",
+                                "s3:GetObjectVersion",
+                                "s3:GetObjectVersionTagging",
+                                "s3:ListBucket",
+                                "s3:ListBucketVersions",
+                                "s3:PutObject",
+                                "s3:PutObjectTagging",
+                            ],
                             "Resource": [
                                 troposphere.Sub("arn:aws:s3:::${DestinationBucket}"),
                                 troposphere.Sub("arn:aws:s3:::${DestinationBucket}/*"),
