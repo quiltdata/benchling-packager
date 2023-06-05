@@ -95,10 +95,10 @@ def lambda_handler(event, context):
         (tmpdir_path / "README.md").write_text(template.render({"entry": entry}))
 
         with zipfile.ZipFile(buf) as zip_file:
-            # TODO: don't read it fully to memory.
-            (tmpdir_path / "notes.pdf").write_bytes(
-                zip_file.read(zip_file.namelist()[0])
-            )
+            with zip_file.open(zip_file.namelist()[0]) as src:
+                with (tmpdir_path / "notes.pdf").open('wb') as dst:
+                    while data := src.read(4096):
+                        dst.write(data)
 
         (tmpdir_path / "quilt_summarize.json").write_text(QUILT_SUMMARIZE)
 
@@ -115,14 +115,13 @@ def lambda_handler(event, context):
         )
 
         fields_values = {}
-        # TODO: check URL quoting
         if "Quilt+ URI" in entry["fields"]:
             fields_values["Quilt+ URI"] = f"quilt+s3://{DST_BUCKET}#package={pkg_name}"
         if "Quilt Catalog URL" in entry["fields"]:
             fields_values[
                 "Quilt Catalog URL"
             ] = f"{QUILT_CATALOG_URL}/b/{DST_BUCKET}/packages/{pkg_name}"
-        # TODO: check if it's correct
+        # TODO: check that this URL is correct
         if "Quilt DropZone URL" in entry["fields"]:
             fields_values[
                 "Quilt DropZone URL"
