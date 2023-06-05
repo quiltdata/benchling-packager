@@ -180,7 +180,7 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         Handler="index.lambda_handler",
         Code=awslambda.Code(ZipFile=(LAMBDAS_DIR / "lambda.py").read_text()),
         ReservedConcurrentExecutions=1,  # FIXME
-        MemorySize=256,
+        MemorySize=512,
     )
     rule = events.Rule(
         "EventBusRule",
