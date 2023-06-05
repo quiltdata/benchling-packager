@@ -83,37 +83,47 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         "BenchlingEventBusName",
         template=cft,
         Type="String",
+        Description=(
+            "Name of event bus where Benchling events are emitted, e.g aws.partner/benchling.com/tenant/app-name"
+        ),
     )
-    # TODO: looks like we can derive tenant from bus name,
-    #       is it guaranteed?
     benchling_tenant = troposphere.Parameter(
         "BenchlingTenant",
         template=cft,
         Type="String",
+        AllowedPattern=r"^[^/]+$",
+        Description="Benchling tenant name, i.e. $BenchlingTenant in https://$BenchlingTenant.benchling.com",
     )
     benchling_client_id = troposphere.Parameter(
         "BenchlingClientId",
         template=cft,
         Type="String",
+        Description="Client ID of Benchling app",
     )
-    # TODO: add AllowedPattern
-    # TODO: currently it assumes https is provided by user
-    quilt_url = troposphere.Parameter(
-        "QuiltUrl",
+    quilt_domain = troposphere.Parameter(
+        "QuiltDomain",
         template=cft,
         Type="String",
+        AllowedPattern=r"^[^/]+$",
+        Description="Domain you use to access Quilt, e.g. quilt.you.company.com",
     )
     dst_bucket = troposphere.Parameter(
         "DestinationBucket",
         template=cft,
         Type="String",
+        AllowedPattern=r"^[\.\-a-z0-9]{3,63}$",
+        Description="The name of S3 bucket where packages will be created",
     )
-    # TODO: add AllowedPattern
     pkg_prefix = troposphere.Parameter(
-        "PackagePrefix",
+        "PackageNamePrefix",
         template=cft,
         Type="String",
         Default="benchling/",
+        AllowedPattern=r".+/.*$",
+        Description=(
+            "Prefix for package names i.e. package names will be $PackageNamePrefix$ExperimentDisplayID,"
+            " must contain, but not start with '/'"
+        ),
     )
 
     make_layer(cft)
@@ -175,7 +185,7 @@ def make_template(*, metadata: dict) -> troposphere.Template:
             BENCHLING_CLIENT_SECRET_ARN=benchling_client_secret.ref(),
             DST_BUCKET=dst_bucket.ref(),
             PKG_PREFIX=pkg_prefix.ref(),
-            QUILT_CATALOG_URL=quilt_url.ref(),
+            QUILT_CATALOG_DOMAIN=quilt_domain.ref(),
         ),
         Handler="index.lambda_handler",
         Code=awslambda.Code(ZipFile=(LAMBDAS_DIR / "lambda.py").read_text()),

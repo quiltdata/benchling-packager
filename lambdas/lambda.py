@@ -18,19 +18,20 @@ logger = Logger()
 
 
 BENCHLING_TENANT = os.environ["BENCHLING_TENANT"]
+BENCHLING_TENANT_URL = f"https://{BENCHLING_TENANT}.benchling.com"
 BENCHLING_CLIENT_ID = os.environ["BENCHLING_CLIENT_ID"]
 BENCHLING_CLIENT_SECRET_ARN = os.environ["BENCHLING_CLIENT_SECRET_ARN"]
 DST_BUCKET = os.environ["DST_BUCKET"]
 PKG_PREFIX = os.environ["PKG_PREFIX"]
-QUILT_CATALOG_URL = os.environ["QUILT_CATALOG_URL"]
+QUILT_CATALOG_DOMAIN = os.environ["QUILT_CATALOG_DOMAIN"]
 
 
 benchling = Benchling(
-    url=BENCHLING_TENANT,
+    url=BENCHLING_TENANT_URL,
     auth_method=ClientCredentialsOAuth2(
         client_id=BENCHLING_CLIENT_ID,
         client_secret=parameters.get_secret(BENCHLING_CLIENT_SECRET_ARN),
-        token_url=f"{BENCHLING_TENANT}/api/v2/token",
+        token_url=BENCHLING_TENANT_URL + "/api/v2/token",
     ),
 )
 
@@ -96,7 +97,7 @@ def lambda_handler(event, context):
 
         with zipfile.ZipFile(buf) as zip_file:
             with zip_file.open(zip_file.namelist()[0]) as src:
-                with (tmpdir_path / "notes.pdf").open('wb') as dst:
+                with (tmpdir_path / "notes.pdf").open("wb") as dst:
                     while data := src.read(4096):
                         dst.write(data)
 
@@ -120,12 +121,12 @@ def lambda_handler(event, context):
         if "Quilt Catalog URL" in entry["fields"]:
             fields_values[
                 "Quilt Catalog URL"
-            ] = f"{QUILT_CATALOG_URL}/b/{DST_BUCKET}/packages/{pkg_name}"
+            ] = f"https://{QUILT_CATALOG_DOMAIN}/b/{DST_BUCKET}/packages/{pkg_name}"
         # TODO: check that this URL is correct
         if "Quilt DropZone URL" in entry["fields"]:
             fields_values[
                 "Quilt DropZone URL"
-            ] = f"{QUILT_CATALOG_URL}/b/{DST_BUCKET}/packages/{pkg_name}/?createPackage=true&dropZoneOnly=true&msg=Commit+Message"
+            ] = f"https://{QUILT_CATALOG_DOMAIN}/b/{DST_BUCKET}/packages/{pkg_name}/?createPackage=true&dropZoneOnly=true&msg=Commit+Message"
 
         if fields_values:
             benchling.entries.update_entry(
