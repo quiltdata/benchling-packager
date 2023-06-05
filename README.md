@@ -1,6 +1,6 @@
 # benchling-packager
 
-This repository contains CloudFormation template which represents example of Bechnling-Quilt integration.
+This repository contains CloudFormation template which represents example of Benchling-Quilt integration.
 It pushes Quilt packages on `v2.entry.created` and `v2.entry.updated.fields`
 Benchling [events](https://docs.benchling.com/docs/events-reference) and updates back Benchling entries
 with links to Quilt. It relies on using [schema](https://help.benchling.com/hc/en-us/articles/9684227216781) for Benchling entries.
