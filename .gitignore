@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 .vscode/settings.json
 benchling_packager.yaml
+.DS_Store
