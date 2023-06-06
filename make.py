@@ -70,7 +70,7 @@ def make_layer(cft: troposphere.Template):
 
 
 def make_template(*, metadata: dict) -> troposphere.Template:
-    description = "TODO"  # TODO
+    description = "Automatically create a dedicated Quilt package for every Benchling notebook"
     cft = troposphere.Template(Description=description)
     troposphere.Output(
         "TemplateBuildMetadata",
@@ -88,11 +88,11 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         ),
     )
     benchling_tenant = troposphere.Parameter(
-        "BenchlingTenant",
+        "BenchlingTenantDomain",
         template=cft,
         Type="String",
         AllowedPattern=r"^[^/]+$",
-        Description="Benchling tenant name, i.e. $BenchlingTenant in https://$BenchlingTenant.benchling.com",
+        Description="DNS name of your Benchling tenant , i.e. $BenchlingTenant in https://$BenchlingTenant.benchling.com",
     )
     benchling_client_id = troposphere.Parameter(
         "BenchlingClientId",
@@ -101,11 +101,11 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         Description="Client ID of Benchling app",
     )
     quilt_domain = troposphere.Parameter(
-        "QuiltDomain",
+        "QuiltCatalogDomain",
         template=cft,
         Type="String",
         AllowedPattern=r"^[^/]+$",
-        Description="Domain you use to access Quilt, e.g. quilt.you.company.com",
+        Description="DNS name of your Quilt Catalog, e.g. quilt.your-company.com",
     )
     dst_bucket = troposphere.Parameter(
         "DestinationBucket",

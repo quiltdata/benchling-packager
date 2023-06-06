@@ -140,10 +140,10 @@ Create CloudFormation stack using the template from step 0.
 7. Under `Parameters`:
     1. Enter the name of the event bus created at step 1 as `BenchlingEventBusName`.
     2. Enter the client ID from settings of app created at step 2 as `BenchlingClientId`.
-    3. Enter the tenant domain as `BenchlingTenantDomain`.
+    3. Enter the DNS name of your Benchling tenant as `BenchlingTenantDomain`.
     4. Enter the name of the S3 bucket to use for storing packages as `DestinationBucket`.
     5. Optional: change the `PackageNamePrefix` used when creating new packages (default: `benchling`).
-    6. Specify the DNS name of your Quilt Catalog as `QuiltDomain`
+    6. Specify the DNS name of your Quilt Catalog as `QuiltCatalogDomain`
 8. Click `Next`, then click `Next` again
 9. Check `I acknowledge that AWS CloudFormation might create IAM resources.`
 10. Click `Submit`
