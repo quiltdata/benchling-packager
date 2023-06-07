@@ -70,7 +70,7 @@ def make_layer(cft: troposphere.Template):
 
 
 def make_template(*, metadata: dict) -> troposphere.Template:
-    description = "TODO"  # TODO
+    description = "Automatically create a dedicated Quilt package for every Benchling notebook"
     cft = troposphere.Template(Description=description)
     troposphere.Output(
         "TemplateBuildMetadata",
