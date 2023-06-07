@@ -18,7 +18,6 @@ logger = Logger()
 
 
 BENCHLING_TENANT = os.environ["BENCHLING_TENANT"]
-BENCHLING_TENANT_URL = f"https://{BENCHLING_TENANT}.benchling.com"
 BENCHLING_CLIENT_ID = os.environ["BENCHLING_CLIENT_ID"]
 BENCHLING_CLIENT_SECRET_ARN = os.environ["BENCHLING_CLIENT_SECRET_ARN"]
 DST_BUCKET = os.environ["DST_BUCKET"]
@@ -27,11 +26,10 @@ QUILT_CATALOG_DOMAIN = os.environ["QUILT_CATALOG_DOMAIN"]
 
 
 benchling = Benchling(
-    url=BENCHLING_TENANT_URL,
+    url=f"https://{BENCHLING_TENANT}.benchling.com",
     auth_method=ClientCredentialsOAuth2(
         client_id=BENCHLING_CLIENT_ID,
         client_secret=parameters.get_secret(BENCHLING_CLIENT_SECRET_ARN),
-        token_url=BENCHLING_TENANT_URL + "/api/v2/token",
     ),
 )
 
