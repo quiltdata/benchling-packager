@@ -171,7 +171,7 @@ You can either create a brand-new schema, or add these fields to an existing sch
 Each new notebook will need to have this schema applied to it.
 You can either do this manualy, or by adding the schema to a template.
 
-See [Benchling docs](https://docs.benchling.com/docs/entry-schema) for more information.
+See [Benchling docs](https://help.benchling.com/hc/en-us/articles/9684227216781) for more information.
 
 ### 6. Test
 
