@@ -1,10 +1,15 @@
 import io
+import json
 import os
 import pathlib
 import tempfile
 import urllib
 import zipfile
 
+# Must be done before importing quilt3
+os.environ["QUILT_DISABLE_CACHE"] = "true"
+
+import botocore
 import jinja2
 import quilt3
 from aws_lambda_powertools import Logger
@@ -15,7 +20,6 @@ from benchling_sdk.benchling import Benchling
 from benchling_sdk.helpers import serialization_helpers
 
 logger = Logger()
-
 
 BENCHLING_TENANT = os.environ["BENCHLING_TENANT"]
 BENCHLING_CLIENT_ID = os.environ["BENCHLING_CLIENT_ID"]
@@ -68,10 +72,22 @@ template = jinja2.Template(
 )
 
 
-QUILT_SUMMARIZE = """[
-    "notes.pdf"
-]
-"""
+QUILT_SUMMARIZE = json.dumps(
+    [
+        [
+            {
+                "path": "entry.md",
+                "width": "calc(40% - 16px)",
+                "expand": True,
+            },
+            {
+                "path": "notes.pdf",
+                "width": "calc(60% - 16px)",
+                "expand": True,
+            },
+        ]
+    ]
+)
 
 
 @logger.inject_lambda_context
@@ -91,7 +107,7 @@ def lambda_handler(event, context):
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir_path = pathlib.Path(tmpdir)
 
-        (tmpdir_path / "README.md").write_text(template.render({"entry": entry}))
+        (tmpdir_path / "entry.md").write_text(template.render({"entry": entry}))
 
         with zipfile.ZipFile(buf) as zip_file:
             with zip_file.open(zip_file.namelist()[0]) as src:
@@ -102,15 +118,22 @@ def lambda_handler(event, context):
         (tmpdir_path / "quilt_summarize.json").write_text(QUILT_SUMMARIZE)
 
         pkg_name = PKG_PREFIX + entry["displayId"]
-        quilt3.Package().set_dir(
+        registry = f"s3://{DST_BUCKET}"
+        try:
+            pkg = quilt3.Package.browse(pkg_name, registry=registry)
+        except botocore.exceptions.ClientError as e:
+            # XXX: quilt3 should raise some specific exception when package doesn't exist.
+            if e.response["Error"]["Code"] not in ("NoSuchKey", "404"):
+                raise
+            pkg = quilt3.Package()
+        pkg.set_dir(
             ".",
             tmpdir_path,
             # This shouldn't hit 1 MB limit on metadata, because max size of EventBridge is 256 KiB.
             meta=entry,
         ).push(
             pkg_name,
-            registry=f"s3://{DST_BUCKET}",
-            force=True,  # FIXME
+            registry=registry,
         )
 
         fields_values = {}
