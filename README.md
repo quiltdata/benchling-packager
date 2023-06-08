@@ -1,9 +1,37 @@
 # benchling-packager
 
-This repository contains CloudFormation template which represents example of Benchling-Quilt integration.
-It pushes Quilt packages on `v2.entry.created` and `v2.entry.updated.fields`
-Benchling [events](https://docs.benchling.com/docs/events-reference) and updates back Benchling entries
-with links to Quilt. It relies on using [schema](https://help.benchling.com/hc/en-us/articles/9684227216781) for Benchling entries.
+The Benchling Packager automatically creates a dedicated Quilt package for every Benchling notebook,
+to help ensure all your experiment data is:
+
+- Findable
+- Linkable
+- Accessible
+- Interoperable
+- Reusable
+
+within your AWS private cloud.
+
+## How it works
+
+This repository uses a Python [Troposphere](https://github.com/cloudtools/troposphere) script
+to generate an example
+[CloudFormation template](https://aws.amazon.com/cloudformation/resources/templates/)
+for Benchling-Quilt integration.
+The template creates an [AWS Lambda function](https://aws.amazon.com/lambda/)
+that is triggered by Benchling EventBridge events.
+
+The lambda will create or update a Quilt packages on the following
+[Benchling EventBridge events](https://docs.benchling.com/docs/events-getting-started#event-types):
+
+- `v2.entry.created`
+- `v2.entry.updated.fields`
+
+If the notebook has an appropriate [schema](https://help.benchling.com/hc/en-us/articles/9684227216781),
+the lambda will also back-update the Benchling notebook entry with the following fields:
+
+- `Quilt+ URI`
+- `Quilt DropZone URL`
+- `Quilt Catalog URL`
 
 ## Installation
 
