@@ -9,6 +9,14 @@ with links to Quilt. It relies on using [schema](https://help.benchling.com/hc/e
 
 > FIXME: currently it works only in us-east-1 region, because lambda's layer is deployed only in that region
 
+You will need access to both the AWS Console and Benchling Admin Console to complete the configuration.
+You will also need:
+
+- Your Benchling tenant domain
+- Your AWS Account ID (e.g. 12345689123)
+- The AWS Region (e.g., us-west-2) you want to process events in
+- An Event Bus Name (e.g., quilt-integration)
+
 ### 0. Generate template
 
 ```shell
