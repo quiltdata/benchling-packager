@@ -83,6 +83,7 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         "BenchlingEventBusName",
         template=cft,
         Type="String",
+        AllowedPattern=r"^aws\.partner(/[\.\-_A-Za-z0-9]+){2,}$",
         Description=(
             "Name of event bus where Benchling events are emitted, e.g aws.partner/benchling.com/tenant/app-name"
         ),
@@ -98,6 +99,7 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         "BenchlingClientId",
         template=cft,
         Type="String",
+        MinLength=1,
         Description="Client ID of Benchling app",
     )
     quilt_domain = troposphere.Parameter(
