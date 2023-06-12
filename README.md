@@ -35,8 +35,6 @@ the lambda will also back-update the Benchling notebook entry with the following
 
 ## Installation
 
-> FIXME: currently it works only in us-east-1 region, because lambda's layer is deployed only in that region
-
 You will need access to both the AWS Console and Benchling Admin Console to complete the configuration.
 You will also need:
 
