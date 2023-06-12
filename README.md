@@ -172,7 +172,7 @@ the notebook must have a schema containing exactly the following fields:
 
 You can either create a brand-new schema, or add these fields to an existing schema.
 Each new notebook will need to have this schema applied to it.
-You can either do this manualy, or by adding the schema to a template.
+You can either do this manually, or by adding the schema to a template.
 
 See [Benchling docs](https://help.benchling.com/hc/en-us/articles/9684227216781) for more information.
 
