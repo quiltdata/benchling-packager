@@ -30,7 +30,7 @@ If the notebook has an appropriate [schema](https://help.benchling.com/hc/en-us/
 the lambda will also back-update the Benchling notebook entry with the following fields:
 
 - `Quilt+ URI`
-- `Quilt DropZone URL`
+- `Quilt Revise URL`
 - `Quilt Catalog URL`
 
 ## Installation
@@ -162,7 +162,7 @@ the notebook must have a schema containing exactly the following fields:
 | Name                  | Required  | Multi-select  | Definition    |
 | --------------------- | --------- | ------------- | ------------- |
 | Quilt+ URI            |           |               | Text          |
-| Quilt DropZone URL    |           |               | Text          |
+| Quilt Revise URL      |           |               | Text          |
 | Quilt Catalog URL     |           |               | Text          |
 | Sentinel              |           |               | Integer       |
 

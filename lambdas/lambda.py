@@ -143,11 +143,10 @@ def lambda_handler(event, context):
             fields_values[
                 "Quilt Catalog URL"
             ] = f"https://{QUILT_CATALOG_DOMAIN}/b/{DST_BUCKET}/packages/{pkg_name}"
-        # TODO: check that this URL is correct
-        if "Quilt DropZone URL" in entry["fields"]:
+        if "Quilt Revise URL" in entry["fields"]:
             fields_values[
-                "Quilt DropZone URL"
-            ] = f"https://{QUILT_CATALOG_DOMAIN}/b/{DST_BUCKET}/packages/{pkg_name}/?createPackage=true&dropZoneOnly=true&msg=Commit+Message"
+                "Quilt Revise URL"
+            ] = f"https://{QUILT_CATALOG_DOMAIN}/b/{DST_BUCKET}/packages/{pkg_name}?action=revisePackage"
 
         if fields_values:
             benchling.entries.update_entry(
