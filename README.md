@@ -57,8 +57,6 @@ python3 make.py > build/template.yml
 ```
 
 This creates a `template.yml` file in the `build` directory.
-There may also be a pre-generated template in
-[GitHub releases](https://github.com/quiltdata/benchling-packager/releases).
 
 ### 1. Create an event subscription in your Benchling tenant
 
