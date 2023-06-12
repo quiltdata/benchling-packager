@@ -9,6 +9,7 @@ error() {
 
 [ "$#" -eq 0 ] || error "Usage: $0"
 
+zip_file="benchling-packager-layer.$(python -c 'import hashlib, pathlib; print(hashlib.sha256(pathlib.Path("requirements.txt").read_bytes()).hexdigest())').zip"
 exec_dir=$(realpath .)
 work_dir=$(realpath "$(mktemp -d)")
 echo "Using $work_dir as a work directory."
@@ -25,7 +26,6 @@ python3 -m pip install \
     -r $exec_dir/requirements.txt
 
 echo "Compressing..."
-zip_file="benchling-packager-layer.zip"
 zip -9 -r "$zip_file" "."
 
 primary_region=us-east-1
@@ -39,13 +39,13 @@ aws s3 cp --acl public-read "$zip_file" "s3://quilt-lambda-$primary_region/$s3_k
 cd ..
 rm -rf "$work_dir"
 
-# for region in $regions
-# do
-#     if [ "$region" != "$primary_region" ]
-#     then
-#         echo "Copying to $region..."
-#         aws s3 cp --acl public-read "s3://quilt-lambda-$primary_region/$s3_key" "s3://quilt-lambda-$region/$s3_key" --region "$region" --source-region "$primary_region"
-#     fi
-# done
+for region in $regions
+do
+    if [ "$region" != "$primary_region" ]
+    then
+        echo "Copying to $region..."
+        aws s3 cp --acl public-read "s3://quilt-lambda-$primary_region/$s3_key" "s3://quilt-lambda-$region/$s3_key" --region "$region" --source-region "$primary_region"
+    fi
+done
 
 echo "Deployed $s3_key"
