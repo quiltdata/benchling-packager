@@ -50,10 +50,13 @@ You will also need:
 Requires a recent version of Python 3.
 
 ```shell
-make
+python3 -m venv venv
+. ./venv/bin/activate
+python3 -m pip install -r requirements.txt
+python3 make.py > build/template.yml
 ```
 
-This creates a `benchling_packager.yaml` file in the `build` directory.
+This creates a `template.yml` file in the `build` directory.
 There may also be a pre-generated template in
 [GitHub releases](https://github.com/quiltdata/benchling-packager/releases).
 
