@@ -94,11 +94,11 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         Description="Client ID of Benchling app",
     )
     quilt_domain = troposphere.Parameter(
-        "QuiltDomain",
+        "QuiltWebHost",
         template=cft,
         Type="String",
         AllowedPattern=r"^[^/]+$",
-        Description="Domain you use to access Quilt, e.g. quilt.you.company.com",
+        Description="Hostname for your Quilt catalog, e.g. quilt.your-company.com",
     )
     dst_bucket = troposphere.Parameter(
         "DestinationBucket",
