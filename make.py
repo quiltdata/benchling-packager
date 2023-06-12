@@ -1,6 +1,5 @@
 import datetime
 import json
-import os
 import pathlib
 import subprocess
 import sys
@@ -23,16 +22,6 @@ LAMBDA_ASSUME_ROLE_POLICY = {
         },
     ],
 }
-LAMBDA_POWERTOOLS_LAYER_ARN = troposphere.Sub(
-    "arn:aws:lambda:${AWS::Region}:017000801446:layer:AWSLambdaPowertoolsPythonV2:15"
-)
-
-
-def get_lambda_layers(*extra_layers):
-    return [
-        # LAMBDA_POWERTOOLS_LAYER_ARN,
-        *extra_layers,
-    ]
 
 
 def make_lambda_environment(**kwargs):
@@ -64,13 +53,15 @@ def make_layer(cft: troposphere.Template):
         template=cft,
         Content=awslambda.Content(
             S3Bucket=troposphere.Sub("quilt-lambda-${AWS::Region}"),
-            S3Key="benchling-packager/benchling-packager-layer.zip",
+            S3Key="benchling-packager/benchling-packager-layer.4bcb4369305e6dca4ec2cec50d2891ad138adfc1f3833293d32a999bd1295770.zip",
         ),
     )
 
 
 def make_template(*, metadata: dict) -> troposphere.Template:
-    description = "Automatically create a dedicated Quilt package for every Benchling notebook"
+    description = (
+        "Automatically create a dedicated Quilt package for every Benchling notebook"
+    )
     cft = troposphere.Template(Description=description)
     troposphere.Output(
         "TemplateBuildMetadata",
@@ -179,8 +170,7 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         Role=role.get_att("Arn"),
         Runtime=LAMBDA_RUNTIME,
         Timeout=LAMBDA_MAX_DURATION_SEC,
-        # VpcConfig=make_lambda_vpc_config([troposphere.Ref("DBAccessorSecurityGroup")]),
-        Layers=get_lambda_layers(troposphere.Ref("Layer")),
+        Layers=[troposphere.Ref("Layer")],
         Environment=make_lambda_environment(
             BENCHLING_TENANT=benchling_tenant.ref(),
             BENCHLING_CLIENT_ID=benchling_client_id.ref(),
