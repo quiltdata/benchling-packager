@@ -108,6 +108,7 @@ def lambda_handler(event, context):
         tmpdir_path = pathlib.Path(tmpdir)
 
         (tmpdir_path / "entry.md").write_text(template.render({"entry": entry}))
+        (tmpdir_path / "entry.json").write_text(entry)
 
         with zipfile.ZipFile(buf) as zip_file:
             with zip_file.open(zip_file.namelist()[0]) as src:
