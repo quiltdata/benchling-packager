@@ -114,7 +114,7 @@ since it was already created there.
 
 ### 4. Create CloudFormation stack
 
-1. Download CloudFormation template [here](benchling_packager.yml)
+1. Download CloudFormation template [here](build/benchling_packager.yml)
 1. Go to the [CloudFormation](https://console.aws.amazon.com/cloudformation/home) service.
 1. Select the region used in step 1.
 1. Click `Create stack` -> `With new resources (standard)`
