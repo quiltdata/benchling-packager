@@ -5,19 +5,20 @@ import pathlib
 import tempfile
 import urllib
 import zipfile
-
-# Must be done before importing quilt3
-os.environ["QUILT_DISABLE_CACHE"] = "true"
-
 import botocore
 import jinja2
-import quilt3
+
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities import parameters
 from benchling_sdk import models as benchling_models
 from benchling_sdk.auth.client_credentials_oauth2 import ClientCredentialsOAuth2
 from benchling_sdk.benchling import Benchling
 from benchling_sdk.helpers import serialization_helpers
+
+# Must be done before importing quilt3
+os.environ["QUILT_DISABLE_CACHE"] = "true"
+import quilt3  # noqa: E402
+
 
 logger = Logger()
 
@@ -122,14 +123,16 @@ def lambda_handler(event, context):
         try:
             pkg = quilt3.Package.browse(pkg_name, registry=registry)
         except botocore.exceptions.ClientError as e:
-            # XXX: quilt3 should raise some specific exception when package doesn't exist.
+            # XXX: quilt3 should raise some specific exception 
+            # when package doesn't exist.
             if e.response["Error"]["Code"] not in ("NoSuchKey", "404"):
                 raise
             pkg = quilt3.Package()
         pkg.set_dir(
             ".",
             tmpdir_path,
-            # This shouldn't hit 1 MB limit on metadata, because max size of EventBridge is 256 KiB.
+            # This shouldn't hit 1 MB limit on metadata,
+            # because max size of EventBridge is 256 KiB.
             meta=entry,
         ).push(
             pkg_name,

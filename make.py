@@ -76,7 +76,8 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         Type="String",
         AllowedPattern=r"^aws\.partner(/[\.\-_A-Za-z0-9]+){2,}$",
         Description=(
-            "Name of event bus where Benchling events are emitted, e.g aws.partner/benchling.com/tenant/app-name"
+            "Name of event bus where Benchling events are emitted, "+\
+                "e.g aws.partner/benchling.com/tenant/app-name"
         ),
     )
     benchling_tenant = troposphere.Parameter(
@@ -84,7 +85,8 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         template=cft,
         Type="String",
         AllowedPattern=r"^[^/]+$",
-        Description="Benchling tenant name, i.e. $BenchlingTenant in https://$BenchlingTenant.benchling.com",
+        Description="Benchling tenant name, i.e. $BenchlingTenant in "+\
+            "https://$BenchlingTenant.benchling.com",
     )
     benchling_client_id = troposphere.Parameter(
         "BenchlingClientId",
