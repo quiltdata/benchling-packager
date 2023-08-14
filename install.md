@@ -114,12 +114,12 @@ since it was already created there.
 
 ### 4. Create CloudFormation stack
 
-1. Download CloudFormation template [here](template.yml)
+1. Download CloudFormation template [here](benchling_packager.yaml)
 1. Go to the [CloudFormation](https://console.aws.amazon.com/cloudformation/home) service.
 1. Select the region used in step 1.
 1. Click `Create stack` -> `With new resources (standard)`
 1. Under `Specify template` select `Upload a template file`
-1. Click `Choose file` and select `template.yml` which you downloaded earlier.
+1. Click `Choose file` and select `benchling_packager.yaml` which you downloaded earlier.
 1. Click `Next` and enter a stack name, e.g. `benchling-packager`
 1. Under `Parameters`:
     1. Enter the name of the event bus created at step 1 as `BenchlingEventBusName`.
