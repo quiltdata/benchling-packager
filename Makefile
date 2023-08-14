@@ -1,9 +1,15 @@
 TARGET = build/benchling_packager.yaml
 ACTIVATE = ./venv/bin/activate
 PKG_URL = "https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager"
-.PHONY: all install pip-compile pip-dev template test upload
+.PHONY: all clean install pip-compile pip-dev template test upload
 
-all: template upload
+all: clean template upload
+
+clean:
+	rm -rf build
+	rm -rf venv
+	rm -f requirements.txt
+	rm -f dev-requirements.txt
 
 template: $(TARGET) 
 

@@ -3,7 +3,7 @@
 set -euo pipefail
 
 error() {
-    echo $@ 2>&1
+    echo "$@" 2>&1
     exit 1
 }
 
@@ -23,7 +23,7 @@ python3 -m pip install \
     --python 3.9 \
     --no-deps \
     --no-compile \
-    -r $exec_dir/requirements.txt
+    -r "$exec_dir/requirements.txt"
 
 echo "Compressing..."
 zip -9 -r "$zip_file" "."
