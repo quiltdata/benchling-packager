@@ -1,10 +1,10 @@
 TARGET = build/benchling_packager.yaml
 ACTIVATE = ./venv/bin/activate
-.PHONY: all build
+.PHONY: all template
 
-all: build
+all: template
 
-build: $(TARGET) 
+template: $(TARGET) 
 
 $(TARGET): venv make.py lambdas/lambda.py
 	. $(ACTIVATE) && python3 -m pip install -r requirements.txt
