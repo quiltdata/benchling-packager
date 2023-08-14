@@ -12,7 +12,8 @@ upload:
 	open $(PKG_URL)
 
 install: venv requirements.txt
-	. $(ACTIVATE) && python3 -m pip install -r requirements.txt
+#   . $(ACTIVATE) && python3 -m pip install -r requirements.txt
+	. $(ACTIVATE) && pip-sync requirements.txt
 
 $(TARGET): install make.py lambdas/lambda.py
 	. $(ACTIVATE) && python3 make.py > $(TARGET)
@@ -20,9 +21,17 @@ $(TARGET): install make.py lambdas/lambda.py
 venv:
 	python3 -m venv venv
 
+tools: venv
+	. $(ACTIVATE) && python3 -m pip install pip-tools
 
 pip-compile: requirements.txt
 
-requirements.txt: requirements.in
-	. $(ACTIVATE) && python3 -m pip install pip-tools
+requirements.txt: tools requirements.in
 	. $(ACTIVATE) && pip-compile requirements.in
+
+pip-dev: venv dev-requirements.txt
+	. $(ACTIVATE) && pip-sync dev-requirements.txt
+
+dev-requirements.txt: tools dev-requirements.in
+	. $(ACTIVATE) && pip-compile dev-requirements.in
+
