@@ -13,3 +13,7 @@ $(TARGET): venv make.py lambdas/lambda.py
 venv:
 	python3 -m venv venv
 
+
+pip-compile:
+	. $(ACTIVATE) && python3 -m pip install pip-tools
+	. $(ACTIVATE) && pip-compile requirements.in
