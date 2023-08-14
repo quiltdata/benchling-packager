@@ -5,23 +5,20 @@ This repository generates a CloudFormation template for processing
 (and link, if possible) a [Quilt](https://quiltdata.com/)
 package for every Benchling notebook.
 
-## Template generation
+## Template generation and upload
 
 Requires a recent version of Python 3.
 
-```shell
-make template # creates a virtual environment to run make.py
-ls build/benchling_packager.yaml
+```bash
+make all
 ```
 
-## Template upload
+This will:
 
-Currently it's distributed as a Quilt [package](https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager)
-which is this way:
-
-```python
-quilt3.Package().set('README.md', 'install.md').set('benchling_packager.yaml', 'build/benchling_packager.yaml').push('examples/benchling-packager', 's3://quilt-example')
-```
+- setup the Python environment
+- generate the template in the `build` directory
+- upload the template to a Quilt package (if you have appropriate permissions)
+- open the package URL: <https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager>
 
 ## Installation
 
