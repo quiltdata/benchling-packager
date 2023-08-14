@@ -1,5 +1,7 @@
 # https://suyojtamrakar.medium.com/managing-your-requirements-txt-with-pip-tools-in-python-8d07d9dfa464
 aws-lambda-powertools ~= 2.15
 benchling-sdk ~= 1.6
+botocore ~= 1.31
 jinja2 ~= 3.1
+quilt3 ~=5.3
 pytest

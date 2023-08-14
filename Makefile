@@ -21,7 +21,7 @@ install: venv requirements.txt
 #   . $(ACTIVATE) && python3 -m pip install -r requirements.txt
 	. $(ACTIVATE) && pip-sync requirements.txt
 
-$(TARGET): install make.py lambdas/lambda.py
+$(TARGET): build install make.py lambdas/lambda.py
 	. $(ACTIVATE) && python3 make.py > $(TARGET)
 
 test: pip-dev run-test
@@ -31,6 +31,9 @@ run-test: venv
 
 venv:
 	python3 -m venv venv
+
+build:
+	mkdir build
 
 tools: venv
 	. $(ACTIVATE) && python3 -m pip install pip-tools
@@ -43,6 +46,6 @@ requirements.txt: tools requirements.in
 pip-dev: venv dev-requirements.txt
 	. $(ACTIVATE) && pip-sync dev-requirements.txt
 
-dev-requirements.txt: tools dev-requirements.in
+dev-requirements.txt: tools dev-requirements.in 
 	. $(ACTIVATE) && pip-compile dev-requirements.in
 
