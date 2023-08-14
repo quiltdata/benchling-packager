@@ -1,7 +1,7 @@
 TARGET = build/benchling_packager.yaml
 ACTIVATE = ./venv/bin/activate
 PKG_URL = "https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager"
-.PHONY: all template install pip-compile upload
+.PHONY: all install pip-compile pip-dev template test upload
 
 all: template upload
 
@@ -17,6 +17,11 @@ install: venv requirements.txt
 
 $(TARGET): install make.py lambdas/lambda.py
 	. $(ACTIVATE) && python3 make.py > $(TARGET)
+
+test: pip-dev run-test
+
+run-test: venv
+	. $(ACTIVATE) && python3 -m pytest
 
 venv:
 	python3 -m venv venv
