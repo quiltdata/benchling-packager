@@ -28,7 +28,7 @@ BENCHLING_CLIENT_SECRET_ARN = os.environ["BENCHLING_CLIENT_SECRET_ARN"]
 DST_BUCKET = os.environ["DST_BUCKET"]
 PKG_PREFIX = os.environ["PKG_PREFIX"]
 QUILT_CATALOG_DOMAIN = os.environ["QUILT_CATALOG_DOMAIN"]
-
+QUILT_PREFIX = f"https://{QUILT_CATALOG_DOMAIN}/b/{DST_BUCKET}/packages"
 
 benchling = Benchling(
     url=f"https://{BENCHLING_TENANT}.benchling.com",
@@ -145,11 +145,11 @@ def lambda_handler(event, context):
         if "Quilt Catalog URL" in entry["fields"]:
             fields_values[
                 "Quilt Catalog URL"
-            ] = f"https://{QUILT_CATALOG_DOMAIN}/b/{DST_BUCKET}/packages/{pkg_name}"
+            ] = f"{QUILT_PREFIX}/{pkg_name}"
         if "Quilt Revise URL" in entry["fields"]:
             fields_values[
                 "Quilt Revise URL"
-            ] = f"https://{QUILT_CATALOG_DOMAIN}/b/{DST_BUCKET}/packages/{pkg_name}?action=revisePackage"
+            ] = f"{QUILT_PREFIX}/{pkg_name}?action=revisePackage"
 
         if fields_values:
             benchling.entries.update_entry(
