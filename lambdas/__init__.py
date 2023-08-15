@@ -1,1 +1,1 @@
-from .client import BenchlingClient
+from .main import BenchlingClient

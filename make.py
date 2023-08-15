@@ -183,7 +183,7 @@ def make_template(*, metadata: dict) -> troposphere.Template:
             QUILT_CATALOG_DOMAIN=quilt_domain.ref(),
         ),
         Handler="index.lambda_handler",
-        Code=awslambda.Code(ZipFile=(LAMBDAS_DIR / "lambda.py").read_text()),
+        Code=awslambda.Code(ZipFile=(LAMBDAS_DIR / "main.py").read_text()),
         ReservedConcurrentExecutions=1,  # FIXME
         MemorySize=512,
     )

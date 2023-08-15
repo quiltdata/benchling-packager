@@ -1,3 +1,4 @@
+sinclude .env
 TARGET = build/benchling_packager.yaml
 ACTIVATE = ./venv/bin/activate
 PKG_URL = "https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager"
