@@ -21,24 +21,18 @@ import quilt3  # noqa: E402
 
 logger = Logger()
 
-BENCHLING_TENANT = os.environ["BENCHLING_TENANT"]
-BENCHLING_CLIENT_ID = os.environ["BENCHLING_CLIENT_ID"]
-BENCHLING_CLIENT_SECRET_ARN = os.environ["BENCHLING_CLIENT_SECRET_ARN"]
-DST_BUCKET = os.environ["DST_BUCKET"]
-PKG_PREFIX = os.environ["PKG_PREFIX"]
-QUILT_CATALOG_DOMAIN = os.environ["QUILT_CATALOG_DOMAIN"]
-
-FIELD_URI = "Quilt+ URI"
-FIELD_CATALOG = "Quilt Catalog URL"
-FIELD_REVISE = "Quilt Revise URL"
-
 class BenchlingClient():
+    BENCHLING_TENANT = os.environ["BENCHLING_TENANT"]
+    BENCHLING_CLIENT_ID = os.environ["BENCHLING_CLIENT_ID"]
+    BENCHLING_CLIENT_SECRET_ARN = os.environ["BENCHLING_CLIENT_SECRET_ARN"]
+
     @classmethod
-    def MakeProxy(cls):
-        BENCHLING_TENANT = os.environ["BENCHLING_TENANT"]
-        BENCHLING_CLIENT_ID = os.environ["BENCHLING_CLIENT_ID"]
-        BENCHLING_CLIENT_SECRET_ARN = os.environ["BENCHLING_CLIENT_SECRET_ARN"]
-        return cls(BENCHLING_TENANT, BENCHLING_CLIENT_ID, BENCHLING_CLIENT_SECRET_ARN)
+    def Default(cls):
+        return cls(
+            cls.BENCHLING_TENANT,
+            cls.BENCHLING_CLIENT_ID,
+            cls.BENCHLING_CLIENT_SECRET_ARN,
+        )
 
     def __init__(self, tenant, id, arn):
         secret = parameters.get_secret(arn)
@@ -121,12 +115,17 @@ class BenchlingEntry:
 {%- endfor %}
 """
 
+    DST_BUCKET = os.environ["DST_BUCKET"]
+    PKG_PREFIX = os.environ["PKG_PREFIX"]
+    QUILT_CATALOG_DOMAIN = os.environ["QUILT_CATALOG_DOMAIN"]
+    QUILT_PREFIX = f"https://{QUILT_CATALOG_DOMAIN}/b/{DST_BUCKET}/packages"
+
     def __init__(self, entry):
-        self.client = BenchlingClient.MakeProxy()
+        self.client = BenchlingClient.Default()
         self.entry = entry
         self.entry_id = entry["id"]
         self.fields = entry["fields"]
-        self.pkg_name = PKG_PREFIX + entry["displayId"]
+        self.pkg_name = self.PKG_PREFIX + entry["displayId"]
 
     def format(self):
         template = jinja2.Template(self.ENTRY_FMT)
@@ -155,7 +154,8 @@ class BenchlingEntry:
         (tmpdir_path / "quilt_summarize.json").write_text(self.QUILT_SUMMARIZE)
 
     def make_package(self, tmpdir_path):
-        registry = f"s3://{DST_BUCKET}"
+        registry = f"s3://{self.DST_BUCKET}"
+        pkg = quilt3.Package()
         try:
             pkg = quilt3.Package.browse(self.pkg_name, registry=registry)
         except botocore_exceptions.ClientError as e:
@@ -163,22 +163,24 @@ class BenchlingEntry:
             # when package doesn't exist.
             if e.response["Error"]["Code"] not in ("NoSuchKey", "404"):
                 raise
-            pkg = quilt3.Package()
+
         pkg.set_dir(".", tmpdir_path, meta=self.entry)
         # This shouldn't hit 1 MB limit on metadata,
         # because max size of EventBridge is 256 KiB.
         pkg.push(self.pkg_name, registry=registry)
 
     def field_values(self):
-        QUILT_PREFIX = f"https://{QUILT_CATALOG_DOMAIN}/b/{DST_BUCKET}/packages"
+        FIELD_URI = "Quilt+ URI"
+        FIELD_CATALOG = "Quilt Catalog URL"
+        FIELD_REVISE = "Quilt Revise URL"
         REVISE="action=revisePackage"
         values = {}
         if FIELD_URI in self.fields:
-            values[FIELD_URI] = f"quilt+s3://{DST_BUCKET}#package={self.pkg_name}"
+            values[FIELD_URI] = f"quilt+s3://{self.DST_BUCKET}#package={self.pkg_name}"
         if FIELD_CATALOG in self.fields:
-            values[FIELD_CATALOG] = f"{QUILT_PREFIX}/{self.pkg_name}"
+            values[FIELD_CATALOG] = f"{self.QUILT_PREFIX}/{self.pkg_name}"
         if FIELD_REVISE in self.fields:
-            values[FIELD_REVISE] = f"{QUILT_PREFIX}/{self.pkg_name}?{REVISE}"
+            values[FIELD_REVISE] = f"{self.QUILT_PREFIX}/{self.pkg_name}?{REVISE}"
         return values
 
     def update_benchling_notebook(self):
