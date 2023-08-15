@@ -35,6 +35,8 @@ class BenchlingClient():
         )
 
     def __init__(self, tenant, id, arn):
+        if not isinstance(arn, str):
+            raise Exception(f"Failed to fetch CLIENT_SECRET_ARN")
         secret = parameters.get_secret(arn)
         if not isinstance(secret, str):
             raise Exception(f"Failed to fetch secret: {arn!r}")
