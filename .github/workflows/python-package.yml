@@ -30,7 +30,9 @@ jobs:
       run: |
         make test TEST_OS=${{ matrix.os }}
       env:
-          BENCHLING_API_KEY: ${{ secrets.BENCHLING_API_KEY }}
-          BENCHLING_AUTHOR_ID: ${{ secrets.BENCHLING_AUTHOR_ID }}
-          BENCHLING_ENTRY_ID: ${{ secrets.BENCHLING_ENTRY_ID }}
-          BENCHLING_TENANT_DNS: ${{ vars.BENCHLING_TENANT_DNS }}
+          BENCHLING_TENANT: ${{ secrets.BENCHLING_TENANT }}
+          BENCHLING_CLIENT_ID: ${{ secrets.BENCHLING_CLIENT_ID }}
+          BENCHLING_CLIENT_SECRET_ARN: ${{ secrets.BENCHLING_CLIENT_SECRET_ARN }}
+          DST_BUCKET: ${{ secrets.DST_BUCKET }}
+          PKG_PREFIX: ${{ secrets.PKG_PREFIX }}
+          QUILT_CATALOG_DOMAIN: ${{ secrets.QUILT_CATALOG_DOMAIN }}
