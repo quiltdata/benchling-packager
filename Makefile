@@ -7,9 +7,8 @@ PKG_URL = "https://open.quiltdata.com/b/quilt-example/packages/examples/benchlin
 all: template upload
 
 clean:
-	rm -rf build
-	rm -rf venv
-	rm -f *requirements.txt
+	rm -rf build venv
+	rm -f *requirements.txt .pytest_cache .DS_Store
 
 template: $(TARGET) 
 
@@ -40,7 +39,7 @@ requirements.txt: venv/bin/pip-compile requirements.in
 	. $(ACTIVATE) && pip-compile requirements.in
 
 test: venv install-dev
-	. $(ACTIVATE) && python3 -m pytest
+	. $(ACTIVATE) && python3 -m pytest  --cov --cov-report xml:coverage.xml
 
 install-dev: venv/bin/pip-sync dev-requirements.txt
 	. $(ACTIVATE) && pip-sync dev-requirements.txt
