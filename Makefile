@@ -42,6 +42,9 @@ requirements.txt: venv/bin/pip-compile requirements.in
 test: venv install-dev
 	. $(ACTIVATE) && python3 -m pytest  --cov --cov-report xml:coverage.xml
 
+test-partials: venv install-dev
+	SKIP_PARTIALS=False . $(ACTIVATE) && python3 -m pytest
+
 coverage: venv install-dev
 	printenv BENCHLING_ENTRY_ID
 	. $(ACTIVATE) && python3 -m pytest --cov --cov-report html:coverage.html

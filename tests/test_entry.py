@@ -92,8 +92,6 @@ def test_push(entry):
         readme = pkg["README.md"]
         assert readme
         assert readme() == "test_push"
-        print(entry.pkg_name, entry.registry)
-        assert False
 
 
 @pytest.mark.skipif(SKIP_PARTIALS, reason="Only do end-to-end test")
