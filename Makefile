@@ -2,19 +2,18 @@ sinclude .env
 TARGET = build/benchling_packager.yaml
 ACTIVATE = ./venv/bin/activate
 PKG_URL = "https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager"
-.PHONY: all check-python39 clean install pip-compile pip-dev template test upload 
+.PHONY: all clean install install-dev template test upload 
 
 all: template upload
 
 clean:
 	rm -rf build
 	rm -rf venv
-	rm -f requirements.txt
-	rm -f dev-requirements.txt
+	rm -f *requirements.txt
 
 template: $(TARGET) 
 
-$(TARGET): build install make.py lambdas/main.py
+$(TARGET): build venv install make.py lambdas/main.py
 	. $(ACTIVATE) && python3 make.py > $(TARGET)
 
 upload:
@@ -24,31 +23,28 @@ upload:
 build:
 	mkdir -p build
 
-install: venv requirements.txt
-	. $(ACTIVATE) && pip-sync requirements.txt
-
-venv: check-python39
+venv:
+	@python3.9 --version|| (echo "Python 3.9 required" && exit 1)
 	python3.9 -m venv venv
 
-check-python39:
-	@python3.9 --version|| (echo "Python 3.9 required" && exit 1)
-
-test: pip-dev run-test
-
-run-test: venv
-	. $(ACTIVATE) && python3 -m pytest
-
-tools: venv
+venv/bin/pip-compile:
 	. $(ACTIVATE) && python3 -m pip install pip-tools
 
-pip-compile: requirements.txt
+venv/bin/pip-sync:
+	. $(ACTIVATE) && python3 -m pip install pip-tools
 
-requirements.txt: tools requirements.in
+install: venv/bin/pip-sync requirements.txt
+	. $(ACTIVATE) && pip-sync requirements.txt
+
+requirements.txt: venv/bin/pip-compile requirements.in
 	. $(ACTIVATE) && pip-compile requirements.in
 
-pip-dev: venv dev-requirements.txt
+test: venv install-dev
+	. $(ACTIVATE) && python3 -m pytest
+
+install-dev: venv/bin/pip-sync dev-requirements.txt
 	. $(ACTIVATE) && pip-sync dev-requirements.txt
 
-dev-requirements.txt: tools dev-requirements.in 
+dev-requirements.txt: venv/bin/pip-sync dev-requirements.in 
 	. $(ACTIVATE) && pip-compile dev-requirements.in
 
