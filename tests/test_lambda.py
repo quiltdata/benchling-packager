@@ -1,4 +1,4 @@
-from aws_lambda_powertools.utilities import parameters
+from aws_lambda_powertools.utilities import parameters  # type: ignore
 from lambdas import BenchlingClient, BenchlingEntry
 
 

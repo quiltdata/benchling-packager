@@ -68,6 +68,8 @@ class BenchlingClient:
 
 
 class BenchlingEntry:
+    REVISE = "action=revisePackage"
+
     QUILT_SUMMARIZE = json.dumps(
         [
             [
@@ -84,6 +86,12 @@ class BenchlingEntry:
             ]
         ]
     )
+
+    FLD = {
+        "URI": "Quilt+ URI",
+        "CAT": "Quilt Catalog URL",
+        "REV": "Quilt Revise URL",
+    }
 
     ENTRY_FMT = """
 # [{{ entry.name }}]({{ entry.webURL }})
@@ -126,8 +134,8 @@ class BenchlingEntry:
         self.client = BenchlingClient.Default()
         self.entry = entry
         self.entry_id = entry["id"]
-        self.fields = entry["fields"]
-        self.pkg_name = self.PKG_PREFIX + entry["displayId"]
+        self.fields = entry.get("fields", {})
+        self.pkg_name = self.PKG_PREFIX + entry.get("displayId", self.entry_id)
 
     def format(self):
         template = jinja2.Template(self.ENTRY_FMT)
@@ -171,18 +179,12 @@ class BenchlingEntry:
         pkg.push(self.pkg_name, registry=registry)
 
     def field_values(self):
-        FIELD_URI = "Quilt+ URI"
-        FIELD_CATALOG = "Quilt Catalog URL"
-        FIELD_REVISE = "Quilt Revise URL"
-        REVISE = "action=revisePackage"
-        values = {}
-        if FIELD_URI in self.fields:
-            values[FIELD_URI] = f"quilt+s3://{self.DST_BUCKET}#package={self.pkg_name}"
-        if FIELD_CATALOG in self.fields:
-            values[FIELD_CATALOG] = f"{self.QUILT_PREFIX}/{self.pkg_name}"
-        if FIELD_REVISE in self.fields:
-            values[FIELD_REVISE] = f"{self.QUILT_PREFIX}/{self.pkg_name}?{REVISE}"
-        return values
+        values = {
+            "URI": f"quilt+s3://{self.DST_BUCKET}#package={self.pkg_name}",
+            "CAT": f"{self.QUILT_PREFIX}/{self.pkg_name}",
+            "REV": f"{self.QUILT_PREFIX}/{self.pkg_name}?{self.REVISE}",
+        }
+        return {f: values.get(k) for k, f in self.FLD.items()}
 
     def update_benchling_notebook(self):
         values = self.field_values()
