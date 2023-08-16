@@ -55,4 +55,3 @@ install-dev: venv/bin/pip-sync dev-requirements.txt
 
 dev-requirements.txt: venv/bin/pip-sync dev-requirements.in 
 	. $(ACTIVATE) && pip-compile dev-requirements.in
-
