@@ -2,7 +2,7 @@ sinclude .env
 TARGET = build/benchling_packager.yaml
 ACTIVATE = ./venv/bin/activate
 PKG_URL = "https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager"
-.PHONY: all check-python39 clean install pip-compile pip-dev template upload 
+.PHONY: all check-python39 clean install pip-compile pip-dev template test upload 
 
 all: template upload
 

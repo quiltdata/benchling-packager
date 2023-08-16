@@ -1,5 +1,5 @@
 from aws_lambda_powertools.utilities import parameters
-from lambdas import BenchlingClient, BenchlingEntry 
+from lambdas import BenchlingClient, BenchlingEntry
 
 
 def test_import():
@@ -18,7 +18,7 @@ def test_secret():
     assert "us-east-1" in arn
     secret = parameters.get_secret(arn)
     assert secret
-    
+
 
 def test_client():
     client = BenchlingClient.Default()

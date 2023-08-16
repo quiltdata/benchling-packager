@@ -1,1 +1,1 @@
-from .main import BenchlingClient, BenchlingEntry
+from .main import BenchlingClient, BenchlingEntry  # noqa: F401

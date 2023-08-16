@@ -4,8 +4,9 @@ import os
 import pathlib
 import tempfile
 import zipfile
-import jinja2
+from urllib import request as urllib_request
 
+import jinja2
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities import parameters
 from benchling_sdk import models as benchling_models
@@ -13,7 +14,6 @@ from benchling_sdk.auth.client_credentials_oauth2 import ClientCredentialsOAuth2
 from benchling_sdk.benchling import Benchling
 from benchling_sdk.helpers import serialization_helpers
 from botocore import exceptions as botocore_exceptions
-from urllib import request as urllib_request
 
 # Must be done before importing quilt3
 os.environ["QUILT_DISABLE_CACHE"] = "true"
@@ -21,7 +21,8 @@ import quilt3  # noqa: E402
 
 logger = Logger()
 
-class BenchlingClient():
+
+class BenchlingClient:
     BENCHLING_TENANT = os.environ["BENCHLING_TENANT"]
     BENCHLING_CLIENT_ID = os.environ["BENCHLING_CLIENT_ID"]
     BENCHLING_CLIENT_SECRET_ARN = os.environ["BENCHLING_CLIENT_SECRET_ARN"]
@@ -36,7 +37,7 @@ class BenchlingClient():
 
     def __init__(self, tenant, id, arn):
         if not isinstance(arn, str):
-            raise Exception(f"Failed to fetch CLIENT_SECRET_ARN")
+            raise Exception("Failed to fetch CLIENT_SECRET_ARN")
         secret = parameters.get_secret(arn)
         if not isinstance(secret, str):
             raise Exception(f"Failed to fetch secret: {arn!r}")
@@ -62,10 +63,9 @@ class BenchlingClient():
         values = {k: {"value": v} for k, v in fields_values.items()}
         self.benchling.entries.update_entry(
             entry_id,
-            benchling_models.EntryUpdate(
-                _fields=serialization_helpers.fields(values)
-            ),
+            benchling_models.EntryUpdate(_fields=serialization_helpers.fields(values)),
         )
+
 
 class BenchlingEntry:
     QUILT_SUMMARIZE = json.dumps(
@@ -132,10 +132,9 @@ class BenchlingEntry:
     def format(self):
         template = jinja2.Template(self.ENTRY_FMT)
         return template.render({"entry": self.entry})
-    
+
     def dump(self):
         return json.dumps(self.entry)
-
 
     def write_notes(self, tmpdir_path):
         task = self.client.get_task(self.entry_id)
@@ -161,7 +160,7 @@ class BenchlingEntry:
         try:
             pkg = quilt3.Package.browse(self.pkg_name, registry=registry)
         except botocore_exceptions.ClientError as e:
-            # XXX: quilt3 should raise some specific exception 
+            # XXX: quilt3 should raise some specific exception
             # when package doesn't exist.
             if e.response["Error"]["Code"] not in ("NoSuchKey", "404"):
                 raise
@@ -175,7 +174,7 @@ class BenchlingEntry:
         FIELD_URI = "Quilt+ URI"
         FIELD_CATALOG = "Quilt Catalog URL"
         FIELD_REVISE = "Quilt Revise URL"
-        REVISE="action=revisePackage"
+        REVISE = "action=revisePackage"
         values = {}
         if FIELD_URI in self.fields:
             values[FIELD_URI] = f"quilt+s3://{self.DST_BUCKET}#package={self.pkg_name}"
@@ -193,13 +192,14 @@ class BenchlingEntry:
         else:
             logger.warning(f"Quilt schema fields not found for entry {self.entry_id!r}")
 
+
 @logger.inject_lambda_context
 def lambda_handler(event, context):
     entry = BenchlingEntry(event["detail"]["entry"])
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir_path = pathlib.Path(tmpdir)
-        
+
         entry.write(tmpdir_path)
         entry.make_package(tmpdir_path)
         entry.update_benchling_notebook()
