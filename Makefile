@@ -2,9 +2,9 @@ sinclude .env
 TARGET = build/benchling_packager.yaml
 ACTIVATE = ./venv/bin/activate
 PKG_URL = "https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager"
-.PHONY: all clean install pip-compile pip-dev template test upload
+.PHONY: all check-python39 clean install pip-compile pip-dev template upload 
 
-all: clean template upload
+all: template upload
 
 clean:
 	rm -rf build
@@ -14,27 +14,29 @@ clean:
 
 template: $(TARGET) 
 
+$(TARGET): build install make.py lambdas/main.py
+	. $(ACTIVATE) && python3 make.py > $(TARGET)
+
 upload:
 	. $(ACTIVATE) && python3 upload.py
 	open $(PKG_URL)
 
+build:
+	mkdir -p build
+
 install: venv requirements.txt
-#   . $(ACTIVATE) && python3 -m pip install -r requirements.txt
 	. $(ACTIVATE) && pip-sync requirements.txt
 
-$(TARGET): build install make.py lambdas/lambda.py
-	. $(ACTIVATE) && python3 make.py > $(TARGET)
+venv: check-python39
+	python3.9 -m venv venv
+
+check-python39:
+	@python3.9 --version|| (echo "Python 3.9 required" && exit 1)
 
 test: pip-dev run-test
 
 run-test: venv
 	. $(ACTIVATE) && python3 -m pytest
-
-venv:
-	python3 -m venv venv
-
-build:
-	mkdir build
 
 tools: venv
 	. $(ACTIVATE) && python3 -m pip install pip-tools
