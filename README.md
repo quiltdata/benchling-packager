@@ -22,7 +22,7 @@ Currently it's distributed as a Quilt [package](https://open.quiltdata.com/b/qui
 which is this way:
 
 ```python
-quilt3.Package().set('README.md', 'install.md').set('benchling_packager.yaml', 'build/benchling_packager.yaml').push('examples/benchling-packager', 's3://quilt-example')
+quilt3.Package().set('README.md', 'Install.md').set('benchling_packager.yaml', 'build/benchling_packager.yaml').push('examples/benchling-packager', 's3://quilt-example')
 ```
 
 ## Installation
