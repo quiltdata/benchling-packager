@@ -1,16 +1,16 @@
 import os
-import pytest
-import quilt3
-
-from lambdas import BenchlingEntry, main
 from pathlib import Path
 from tempfile import TemporaryDirectory
+
+import pytest
+import quilt3
+from lambdas import BenchlingEntry, main
 
 LOCAL_ONLY = os.environ.get("LOCAL_ONLY", False)
 SKIP_PARTIALS = os.environ.get("SKIP_PARTIALS", True)
 
 try:
-    BENCHLING_ENTRY_ID=os.environ["BENCHLING_ENTRY_ID"]
+    BENCHLING_ENTRY_ID = os.environ["BENCHLING_ENTRY_ID"]
 except KeyError:
     pytest.skip(allow_module_level=True)
 
@@ -78,6 +78,7 @@ def test_write(entry):
         assert isinstance(notes, Path)
         assert notes.exists()
 
+
 @pytest.mark.skipif(SKIP_PARTIALS, reason="Only do end-to-end test")
 def test_push(entry):
     with TemporaryDirectory() as tmpdir:
@@ -100,7 +101,8 @@ def test_update(entry):
     rc = entry.update_benchling_notebook()
     assert rc
 
-@pytest.mark.skipif(SKIP_PARTIALS==False, reason="Only do partial tests")
+
+@pytest.mark.skipif(SKIP_PARTIALS is False, reason="Only do partial tests")
 def test_handler():
     entry = main(ENTRY_DATA)
     assert isinstance(entry, BenchlingEntry)

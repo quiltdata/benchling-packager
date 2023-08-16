@@ -124,7 +124,7 @@ since it was already created there.
 1. Under `Parameters`:
     1. Enter the name of the event bus created at step 1 as `BenchlingEventBusName`.
     1. Enter the client ID from settings of app created at step 2 as `BenchlingClientId`.
-    1. Enter the your Benchling tenant name (i.e. $BenchlingTenant in https://$BenchlingTenant.benchling.com) as `BenchlingTenant`.
+    1. Enter the your Benchling tenant name (i.e. $BenchlingTenant in <https://$BenchlingTenant.benchling.com>) as `BenchlingTenant`.
     1. Enter the name of the S3 bucket to use for storing packages as `DestinationBucket`.
     1. Optional: change the `PackageNamePrefix` used when creating new packages (default: `benchling/`).
     1. Specify the hostname of your Quilt Catalog as `QuiltWebHost`
@@ -144,12 +144,12 @@ click on its Physical ID.
 In order for the lambda to update Benchling with the package information,
 the notebook must have a schema containing exactly the following fields:
 
-| Name                  | Required  | Multi-select  | Definition    |
-| --------------------- | --------- | ------------- | ------------- |
-| Quilt+ URI            |           |               | Text          |
-| Quilt Revise URL      |           |               | Text          |
-| Quilt Catalog URL     |           |               | Text          |
-| Sentinel              |           |               | Integer       |
+| Name              | Required | Multi-select | Definition |
+|-------------------|----------|--------------|------------|
+| Quilt+ URI        |          |              | Text       |
+| Quilt Revise URL  |          |              | Text       |
+| Quilt Catalog URL |          |              | Text       |
+| Sentinel          |          |              | Integer    |
 
 You can either create a brand-new schema, or add these fields to an existing schema.
 Each new notebook will need to have this schema applied to it.

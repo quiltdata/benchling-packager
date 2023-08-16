@@ -143,7 +143,6 @@ class BenchlingEntry:
         SEP = "/" if self.PKG_PREFIX[-1] != "/" else ""
         return self.PKG_PREFIX + SEP + self.entry.get("displayId", self.entry_id)
 
-
     def format(self):
         template = jinja2.Template(self.ENTRY_FMT)
         return template.render({"entry": self.entry})
@@ -164,7 +163,7 @@ class BenchlingEntry:
                     while data := src.read(4096):
                         dst.write(data)
         return outfile
-                
+
     def write_files(self, tmpdir_path):
         self.write_notes(tmpdir_path)
         (tmpdir_path / "entry.md").write_text(self.format())
@@ -185,7 +184,6 @@ class BenchlingEntry:
         # This shouldn't hit 1 MB limit on metadata,
         # because max size of EventBridge is 256 KiB.
         return pkg.push(self.pkg_name, registry=self.registry)
-        
 
     def field_values(self):
         values = {
@@ -205,6 +203,7 @@ class BenchlingEntry:
             logger.warning(f"Quilt schema fields not found for entry {self.entry_id!r}")
             return False
 
+
 def main(entry_dict):
     entry = BenchlingEntry(entry_dict)
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -214,6 +213,7 @@ def main(entry_dict):
         entry.push_package(tmpdir_path)
         entry.update_benchling_notebook()
     return entry
+
 
 @logger.inject_lambda_context
 def lambda_handler(event, context):

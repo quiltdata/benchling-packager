@@ -24,4 +24,3 @@ def test_secret():
 def test_client():
     client = BenchlingClient.Default()
     assert client
-
