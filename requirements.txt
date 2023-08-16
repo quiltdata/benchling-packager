@@ -13,13 +13,12 @@ aws-requests-auth==0.4.3
     # via quilt3
 aws-sam-translator==1.73.0
     # via cfn-lint
-boto3==1.28.26
+boto3==1.28.27
     # via
     #   aws-sam-translator
     #   quilt3
-botocore==1.31.26
+botocore==1.31.27
     # via
-    #   -r requirements.in
     #   boto3
     #   s3transfer
 certifi==2023.7.22
@@ -87,7 +86,7 @@ requests==2.31.0
     #   requests-futures
 requests-futures==1.0.0
     # via quilt3
-s3transfer==0.6.1
+s3transfer==0.6.2
     # via boto3
 sarif-om==1.0.4
     # via cfn-lint
@@ -103,7 +102,7 @@ tenacity==8.2.3
     # via quilt3
 tqdm==4.66.1
     # via quilt3
-troposphere==4.4.0
+troposphere==4.4.1
     # via -r requirements.in
 typing-extensions==4.7.1
     # via

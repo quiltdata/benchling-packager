@@ -18,12 +18,10 @@ python3 make.py > build/benchling_packager.yaml
 
 ## Template upload
 
-Currently it's distributed as a Quilt [package](https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager)
-which is this way:
-
-```python
-quilt3.Package().set('README.md', 'Install.md').set('benchling_packager.yaml', 'build/benchling_packager.yaml').push('examples/benchling-packager', 's3://quilt-example')
-```
+- setup the Python environment
+- generate the template in the `build` directory
+- upload the template to a Quilt package (if you have appropriate permissions)
+- open the package URL: <https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager>
 
 ## Installation
 
