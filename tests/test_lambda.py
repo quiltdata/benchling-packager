@@ -1,10 +1,11 @@
 from aws_lambda_powertools.utilities import parameters  # type: ignore
-from lambdas import BenchlingClient, BenchlingEntry
+from lambdas import BenchlingClient, BenchlingEntry, main
 
 
 def test_import():
     assert BenchlingClient
     assert BenchlingEntry
+    assert main
 
 
 def test_env():
@@ -23,3 +24,4 @@ def test_secret():
 def test_client():
     client = BenchlingClient.Default()
     assert client
+

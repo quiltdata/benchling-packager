@@ -52,7 +52,7 @@ class BenchlingClient:
     def get_task(self, entry_id):
         self.task = self.benchling.tasks.wait_for_task(
             self.benchling.exports.export(
-                benchling_models.ExportItemRequest(_id=entry_id)
+                benchling_models.ExportItemRequest(id=entry_id)  # type: ignore
             ).task_id
         )
         if self.task.status != benchling_models.AsyncTaskStatus.SUCCEEDED:
@@ -61,9 +61,10 @@ class BenchlingClient:
 
     def update_entry(self, entry_id, fields_values):
         values = {k: {"value": v} for k, v in fields_values.items()}
+        fields = serialization_helpers.fields(values)
         self.benchling.entries.update_entry(
             entry_id,
-            benchling_models.EntryUpdate(_fields=serialization_helpers.fields(values)),
+            benchling_models.EntryUpdate(fields=fields),  # type: ignore
         )
 
 
@@ -135,7 +136,13 @@ class BenchlingEntry:
         self.entry = entry
         self.entry_id = entry["id"]
         self.fields = entry.get("fields", {})
-        self.pkg_name = self.PKG_PREFIX + entry.get("displayId", self.entry_id)
+        self.pkg_name = self.name()
+        self.registry = f"s3://{self.DST_BUCKET}"
+
+    def name(self):
+        SEP = "/" if self.PKG_PREFIX[-1] != "/" else ""
+        return self.PKG_PREFIX + SEP + self.entry.get("displayId", self.entry_id)
+
 
     def format(self):
         template = jinja2.Template(self.ENTRY_FMT)
@@ -145,6 +152,7 @@ class BenchlingEntry:
         return json.dumps(self.entry)
 
     def write_notes(self, tmpdir_path):
+        outfile = tmpdir_path / "notes.pdf"
         task = self.client.get_task(self.entry_id)
 
         with urllib_request.urlopen(task.response["downloadURL"]) as src:
@@ -152,21 +160,21 @@ class BenchlingEntry:
 
         with zipfile.ZipFile(buf) as zip_file:
             with zip_file.open(zip_file.namelist()[0]) as src:
-                with (tmpdir_path / "notes.pdf").open("wb") as dst:
+                with outfile.open("wb") as dst:
                     while data := src.read(4096):
                         dst.write(data)
-
-    def write(self, tmpdir_path):
+        return outfile
+                
+    def write_files(self, tmpdir_path):
         self.write_notes(tmpdir_path)
         (tmpdir_path / "entry.md").write_text(self.format())
         (tmpdir_path / "entry.json").write_text(self.dump())
         (tmpdir_path / "quilt_summarize.json").write_text(self.QUILT_SUMMARIZE)
 
-    def make_package(self, tmpdir_path):
-        registry = f"s3://{self.DST_BUCKET}"
+    def push_package(self, tmpdir_path):
         pkg = quilt3.Package()
         try:
-            pkg = quilt3.Package.browse(self.pkg_name, registry=registry)
+            pkg = quilt3.Package.browse(self.pkg_name, registry=self.registry)
         except botocore_exceptions.ClientError as e:
             # XXX: quilt3 should raise some specific exception
             # when package doesn't exist.
@@ -176,7 +184,8 @@ class BenchlingEntry:
         pkg.set_dir(".", tmpdir_path, meta=self.entry)
         # This shouldn't hit 1 MB limit on metadata,
         # because max size of EventBridge is 256 KiB.
-        pkg.push(self.pkg_name, registry=registry)
+        return pkg.push(self.pkg_name, registry=self.registry)
+        
 
     def field_values(self):
         values = {
@@ -186,25 +195,29 @@ class BenchlingEntry:
         }
         return {f: values.get(k) for k, f in self.FLD.items()}
 
-    def update_benchling_notebook(self):
+    def update_benchling_notebook(self) -> bool:
         values = self.field_values()
         if values:
             self.client.update_entry(self.entry_id, values)
             logger.debug(f"Updated entry {self.entry_id} with package {self.pkg_name}")
+            return True
         else:
             logger.warning(f"Quilt schema fields not found for entry {self.entry_id!r}")
+            return False
 
-
-@logger.inject_lambda_context
-def lambda_handler(event, context):
-    entry = BenchlingEntry(event["detail"]["entry"])
-
+def main(entry_dict):
+    entry = BenchlingEntry(entry_dict)
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir_path = pathlib.Path(tmpdir)
 
-        entry.write(tmpdir_path)
-        entry.make_package(tmpdir_path)
+        entry.write_files(tmpdir_path)
+        entry.push_package(tmpdir_path)
         entry.update_benchling_notebook()
+    return entry
+
+@logger.inject_lambda_context
+def lambda_handler(event, context):
+    main(event["detail"]["entry"])
 
     return {
         "statusCode": 200,

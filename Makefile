@@ -44,7 +44,7 @@ test: venv install-dev
 
 coverage: venv install-dev
 	printenv BENCHLING_ENTRY_ID
-	BENCHLING_ENTRY_ID=$(BENCHLING_ENTRY_ID) . $(ACTIVATE) && python3 -m pytest --cov --cov-report html:coverage.html
+	. $(ACTIVATE) && python3 -m pytest --cov --cov-report html:coverage.html
 	open coverage.html/index.html
 
 watch: venv install-dev
