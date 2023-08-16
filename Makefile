@@ -9,6 +9,7 @@ all: template upload
 clean:
 	rm -rf build venv
 	rm -f *requirements.txt .pytest_cache .DS_Store
+	rm -f .coverage coverage.xml
 
 template: $(TARGET) 
 
@@ -40,6 +41,13 @@ requirements.txt: venv/bin/pip-compile requirements.in
 
 test: venv install-dev
 	. $(ACTIVATE) && python3 -m pytest  --cov --cov-report xml:coverage.xml
+
+coverage: venv install-dev
+	. $(ACTIVATE) && python3 -m --cov --cov-report html:coverage.html
+	open coverage.html/index.html
+
+watch: venv install-dev
+	. $(ACTIVATE) && ptw . --now
 
 install-dev: venv/bin/pip-sync dev-requirements.txt
 	. $(ACTIVATE) && pip-sync dev-requirements.txt
