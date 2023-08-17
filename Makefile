@@ -2,18 +2,18 @@ sinclude .env
 TARGET = build/benchling_packager.yaml
 ACTIVATE = ./venv/bin/activate
 PKG_URL = "https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager"
-.PHONY: all clean install template upload 
+.PHONY: all clean install install-dev template test upload 
 
 all: template upload
 
 clean:
-	rm -rf build
-	rm -rf venv
-	rm -f *requirements.txt
+	rm -rf build venv
+	rm -f *requirements.txt .pytest_cache .DS_Store
+	rm -f .coverage coverage.xml
 
 template: $(TARGET) 
 
-$(TARGET): build venv install make.py lambdas/lambda.py
+$(TARGET): build venv install make.py lambdas/main.py
 	. $(ACTIVATE) && python3 make.py > $(TARGET)
 
 upload:
@@ -38,3 +38,23 @@ install: venv/bin/pip-sync requirements.txt
 
 requirements.txt: venv/bin/pip-compile requirements.in
 	. $(ACTIVATE) && pip-compile requirements.in
+
+test: venv install-dev
+	. $(ACTIVATE) && python3 -m pytest  --cov --cov-report xml:coverage.xml
+
+test-partials: venv install-dev
+	SKIP_PARTIALS=False . $(ACTIVATE) && python3 -m pytest
+
+coverage: venv install-dev
+	printenv BENCHLING_ENTRY_ID
+	. $(ACTIVATE) && python3 -m pytest --cov --cov-report html:coverage.html
+	open coverage.html/index.html
+
+watch: venv install-dev
+	. $(ACTIVATE) && ptw . --now
+
+install-dev: venv/bin/pip-sync dev-requirements.txt
+	. $(ACTIVATE) && pip-sync dev-requirements.txt
+
+dev-requirements.txt: venv/bin/pip-sync dev-requirements.in 
+	. $(ACTIVATE) && pip-compile dev-requirements.in

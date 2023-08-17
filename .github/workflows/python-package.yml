@@ -1,0 +1,48 @@
+# This workflow will install Python dependencies and run tests
+name: Python package
+
+on:
+  push:
+permissions: read-all
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      id-token: write
+      issues: write
+      pull-requests: write
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9"]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::712023778557:role/github/GitHub-Testing-BenchlingPackager
+        aws-region: us-east-1
+    - name: Test with pytest
+      run: |
+        make test TEST_OS=${{ matrix.os }}
+      env:
+          BENCHLING_TENANT: ${{ secrets.BENCHLING_TENANT }}
+          BENCHLING_CLIENT_ID: ${{ secrets.BENCHLING_CLIENT_ID }}
+          BENCHLING_CLIENT_SECRET_ARN: ${{ secrets.BENCHLING_CLIENT_SECRET_ARN }}
+          DST_BUCKET: ${{ secrets.DST_BUCKET }}
+          PKG_PREFIX: ${{ secrets.PKG_PREFIX }}
+          QUILT_CATALOG_DOMAIN: ${{ secrets.QUILT_CATALOG_DOMAIN }}
+    - name: Get Coverage Report
+      uses: orgoro/coverage@v3.1
+      with:
+        coverageFile: coverage.xml
+        token: ${{ secrets.GITHUB_TOKEN }}
+        thresholdAll: 0.8
+      if: github.event_name == 'pull_request'

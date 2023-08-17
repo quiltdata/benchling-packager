@@ -53,7 +53,7 @@ def make_layer(cft: troposphere.Template):
         template=cft,
         Content=awslambda.Content(
             S3Bucket=troposphere.Sub("quilt-lambda-${AWS::Region}"),
-            S3Key="benchling-packager/benchling-packager-layer.4bcb4369305e6dca4ec2cec50d2891ad138adfc1f3833293d32a999bd1295770.zip",
+            S3Key="benchling-packager/benchling-packager-layer.4bcb4369305e6dca4ec2cec50d2891ad138adfc1f3833293d32a999bd1295770.zip",  # noqa
         ),
     )
 
@@ -76,7 +76,8 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         Type="String",
         AllowedPattern=r"^aws\.partner(/[\.\-_A-Za-z0-9]+){2,}$",
         Description=(
-            "Name of event bus where Benchling events are emitted, e.g aws.partner/benchling.com/tenant/app-name"
+            "Name of event bus where Benchling events are emitted, "
+            + "e.g aws.partner/benchling.com/tenant/app-name"
         ),
     )
     benchling_tenant = troposphere.Parameter(
@@ -84,7 +85,8 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         template=cft,
         Type="String",
         AllowedPattern=r"^[^/]+$",
-        Description="Benchling tenant name, i.e. $BenchlingTenant in https://$BenchlingTenant.benchling.com",
+        Description="Benchling tenant name, i.e. $BenchlingTenant in "
+        + "https://$BenchlingTenant.benchling.com",
     )
     benchling_client_id = troposphere.Parameter(
         "BenchlingClientId",
@@ -114,7 +116,8 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         Default="benchling/",
         AllowedPattern=r".+/.*$",
         Description=(
-            "Prefix for package names i.e. package names will be $PackageNamePrefix$ExperimentDisplayID,"
+            "Prefix for package names i.e. package names will be"
+            " $PackageNamePrefix$ExperimentDisplayID,"
             " must contain, but not start with '/'"
         ),
     )
@@ -180,7 +183,7 @@ def make_template(*, metadata: dict) -> troposphere.Template:
             QUILT_CATALOG_DOMAIN=quilt_domain.ref(),
         ),
         Handler="index.lambda_handler",
-        Code=awslambda.Code(ZipFile=(LAMBDAS_DIR / "lambda.py").read_text()),
+        Code=awslambda.Code(ZipFile=(LAMBDAS_DIR / "main.py").read_text()),
         ReservedConcurrentExecutions=1,  # FIXME
         MemorySize=512,
     )
