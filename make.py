@@ -117,8 +117,8 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         AllowedPattern=r".+/.*$",
         Description=(
             "Prefix for package names i.e. package names will be"
-            + " $PackageNamePrefix$ExperimentDisplayID,"
-            + " must contain, but not start with '/'"
+            " $PackageNamePrefix$ExperimentDisplayID,"
+            " must contain, but not start with '/'"
         ),
     )
 
