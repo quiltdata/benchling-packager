@@ -37,9 +37,7 @@ def make_lambda_environment(**kwargs):
 def get_metadata():
     """build-time metadata for inclusion in template"""
     return {
-        "git_revision": subprocess.run(
-            ("git", "rev-parse", "HEAD"), capture_output=True, text=True
-        ).stdout.rstrip(),
+        "git_revision": subprocess.run(("git", "rev-parse", "HEAD"), capture_output=True, text=True).stdout.rstrip(),
         "git_repository": subprocess.run(
             ("git", "rev-parse", "--show-toplevel"), capture_output=True, text=True
         ).stdout.rstrip(),
@@ -59,9 +57,7 @@ def make_layer(cft: troposphere.Template):
 
 
 def make_template(*, metadata: dict) -> troposphere.Template:
-    description = (
-        "Automatically create a dedicated Quilt package for every Benchling notebook"
-    )
+    description = "Automatically create a dedicated Quilt package for every Benchling notebook"
     cft = troposphere.Template(Description=description)
     troposphere.Output(
         "TemplateBuildMetadata",
@@ -76,8 +72,7 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         Type="String",
         AllowedPattern=r"^aws\.partner(/[\.\-_A-Za-z0-9]+){2,}$",
         Description=(
-            "Name of event bus where Benchling events are emitted, "
-            + "e.g aws.partner/benchling.com/tenant/app-name"
+            "Name of event bus where Benchling events are emitted, " + "e.g aws.partner/benchling.com/tenant/app-name"
         ),
     )
     benchling_tenant = troposphere.Parameter(
@@ -85,8 +80,7 @@ def make_template(*, metadata: dict) -> troposphere.Template:
         template=cft,
         Type="String",
         AllowedPattern=r"^[^/]+$",
-        Description="Benchling tenant name, i.e. $BenchlingTenant in "
-        + "https://$BenchlingTenant.benchling.com",
+        Description="Benchling tenant name, i.e. $BenchlingTenant in " + "https://$BenchlingTenant.benchling.com",
     )
     benchling_client_id = troposphere.Parameter(
         "BenchlingClientId",

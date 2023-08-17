@@ -51,9 +51,7 @@ class BenchlingClient:
 
     def get_task(self, entry_id):
         self.task = self.benchling.tasks.wait_for_task(
-            self.benchling.exports.export(
-                benchling_models.ExportItemRequest(id=entry_id)  # type: ignore
-            ).task_id
+            self.benchling.exports.export(benchling_models.ExportItemRequest(id=entry_id)).task_id  # type: ignore
         )
         if self.task.status != benchling_models.AsyncTaskStatus.SUCCEEDED:
             raise Exception(f"Notes export failed: {self.task!r}")
