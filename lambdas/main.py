@@ -140,8 +140,10 @@ class BenchlingEntry:
         self.registry = f"s3://{self.DST_BUCKET}"
 
     def name(self):
-        SEP = "/" if self.PKG_PREFIX[-1] != "/" else ""
-        return self.PKG_PREFIX + SEP + self.entry.get("displayId", self.entry_id)
+        SEP = "/"
+        if SEP not in self.PKG_PREFIX:
+            self.PKG_PREFIX += SEP
+        return self.PKG_PREFIX + self.entry.get("displayId", self.entry_id)
 
     def format(self):
         template = jinja2.Template(self.ENTRY_FMT)

@@ -6,7 +6,6 @@ import pytest
 import quilt3
 from lambdas import BenchlingEntry, main
 
-LOCAL_ONLY = os.environ.get("LOCAL_ONLY", False)
 SKIP_PARTIALS = os.environ.get("SKIP_PARTIALS", True)
 
 try:
