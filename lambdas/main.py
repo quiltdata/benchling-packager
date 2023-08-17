@@ -88,10 +88,10 @@ class BenchlingEntry:
         ]
     )
 
-    FLD = {
-        "URI": "Quilt+ URI",
-        "CAT": "Quilt Catalog URL",
-        "REV": "Quilt Revise URL",
+    FIELDS = {
+        "QUILT_URI": "Quilt+ URI",
+        "CATALOG_URL": "Quilt Catalog URL",
+        "REVISE_URL": "Quilt Revise URL",
     }
 
     ENTRY_FMT = """
@@ -189,11 +189,11 @@ class BenchlingEntry:
 
     def field_values(self):
         values = {
-            "URI": f"quilt+s3://{self.DST_BUCKET}#package={self.pkg_name}",
-            "CAT": f"{self.QUILT_PREFIX}/{self.pkg_name}",
-            "REV": f"{self.QUILT_PREFIX}/{self.pkg_name}?{self.REVISE}",
+            "QUILT_URI": f"quilt+s3://{self.DST_BUCKET}#package={self.pkg_name}",
+            "CATALOG_URL": f"{self.QUILT_PREFIX}/{self.pkg_name}",
+            "REVISE_URL": f"{self.QUILT_PREFIX}/{self.pkg_name}?{self.REVISE}",
         }
-        return {f: values.get(k) for k, f in self.FLD.items()}
+        return {f: values.get(k) for k, f in self.FIELDS.items()}
 
     def update_benchling_notebook(self) -> bool:
         values = self.field_values()
