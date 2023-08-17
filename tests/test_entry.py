@@ -70,8 +70,7 @@ def test_write(entry):
     with TemporaryDirectory() as tmpdir:
         tmpdir_path = Path(tmpdir)
         entry.write_files(tmpdir_path)
-        files = list(tmpdir_path.glob("*"))
-        fn = {f.name: f for f in files}
+        fn = {f.name: f for f in tmpdir_path.glob("*")}
         assert "entry.json" in fn
         assert "notes.pdf" in fn
         notes = fn["notes.pdf"]
