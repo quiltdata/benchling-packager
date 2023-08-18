@@ -45,6 +45,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # ADD YOUR CUSTOM ENV VARIABLES HERE OR DEFINE THEM IN A FILE .mega-linter.yml AT THE ROOT OF YOUR REPOSITORY
           DISABLE: COPYPASTE,SPELL # Uncomment to disable copy-paste and spell checks
+          PYTHON_FLAKE8_ARGUMENTS: --max-line-length=119 # Uncomment to override Flake8 arguments
+          PYTHON_RUFF_ARGUMENTS: --max-line-length=119 # Uncomment to override Ruffus arguments
+
 
       # Upload MegaLinter artifacts
       - name: Archive production artifacts
