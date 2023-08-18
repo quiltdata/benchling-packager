@@ -174,9 +174,8 @@ class BenchlingEntry:
         pkg = quilt3.Package()
         try:
             pkg = quilt3.Package.browse(self.pkg_name, registry=self.registry)
+            # see if package name already exists; otherwise use default
         except botocore_exceptions.ClientError as e:
-            # XXX: quilt3 should raise some specific exception
-            # when package doesn't exist.
             if e.response["Error"]["Code"] not in ("NoSuchKey", "404"):
                 raise
 
