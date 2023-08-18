@@ -39,8 +39,11 @@ install: venv/bin/pip-sync requirements.txt
 requirements.txt: venv/bin/pip-compile requirements.in
 	. $(ACTIVATE) && pip-compile requirements.in
 
-test: venv install-dev
+test: venv install-dev lint
 	. $(ACTIVATE) && python3 -m pytest  --cov --cov-report xml:coverage.xml
+
+lint: venv install-dev
+	. $(ACTIVATE) && black .
 
 test-partials: venv install-dev
 	SKIP_PARTIALS=False . $(ACTIVATE) && python3 -m pytest

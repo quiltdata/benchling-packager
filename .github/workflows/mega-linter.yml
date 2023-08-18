@@ -1,3 +1,4 @@
+---
 # MegaLinter GitHub Action configuration file
 # More info at https://megalinter.github.io
 name: MegaLinter
@@ -41,9 +42,13 @@ jobs:
           # https://megalinter.github.io/configuration/
           VALIDATE_ALL_CODEBASE: true  
           # VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # Validates all source when push on main, else just the git diff with main. Override with true if you always want to lint all sources
+          PAT: ${{ secrets.PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # ADD YOUR CUSTOM ENV VARIABLES HERE OR DEFINE THEM IN A FILE .mega-linter.yml AT THE ROOT OF YOUR REPOSITORY
           DISABLE: COPYPASTE,SPELL # Uncomment to disable copy-paste and spell checks
+          PYTHON_FLAKE8_ARGUMENTS: --max-line-length=119 # Uncomment to override Flake8 arguments
+          PYTHON_RUFF_ARGUMENTS: --line-length=119 # Uncomment to override Ruffus arguments
+
 
       # Upload MegaLinter artifacts
       - name: Archive production artifacts

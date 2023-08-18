@@ -5,6 +5,8 @@ This repository generates a CloudFormation template for processing
 (and link, if possible) a [Quilt](https://quiltdata.com/)
 package for every Benchling notebook.
 
+The code in this repository is open source under the [Apache 2.0 license](./LICENSE.txt).
+
 ## Template generation
 
 Requires a recent version of Python 3.

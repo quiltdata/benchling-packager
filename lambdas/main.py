@@ -51,9 +51,7 @@ class BenchlingClient:
 
     def get_task(self, entry_id):
         self.task = self.benchling.tasks.wait_for_task(
-            self.benchling.exports.export(
-                benchling_models.ExportItemRequest(id=entry_id)  # type: ignore
-            ).task_id
+            self.benchling.exports.export(benchling_models.ExportItemRequest(id=entry_id)).task_id  # type: ignore
         )
         if self.task.status != benchling_models.AsyncTaskStatus.SUCCEEDED:
             raise Exception(f"Notes export failed: {self.task!r}")
@@ -88,10 +86,10 @@ class BenchlingEntry:
         ]
     )
 
-    FLD = {
-        "URI": "Quilt+ URI",
-        "CAT": "Quilt Catalog URL",
-        "REV": "Quilt Revise URL",
+    FIELDS = {
+        "QUILT_URI": "Quilt+ URI",
+        "CATALOG_URL": "Quilt Catalog URL",
+        "REVISE_URL": "Quilt Revise URL",
     }
 
     ENTRY_FMT = """
@@ -176,9 +174,8 @@ class BenchlingEntry:
         pkg = quilt3.Package()
         try:
             pkg = quilt3.Package.browse(self.pkg_name, registry=self.registry)
+            # see if package name already exists; otherwise use default
         except botocore_exceptions.ClientError as e:
-            # XXX: quilt3 should raise some specific exception
-            # when package doesn't exist.
             if e.response["Error"]["Code"] not in ("NoSuchKey", "404"):
                 raise
 
@@ -189,11 +186,11 @@ class BenchlingEntry:
 
     def field_values(self):
         values = {
-            "URI": f"quilt+s3://{self.DST_BUCKET}#package={self.pkg_name}",
-            "CAT": f"{self.QUILT_PREFIX}/{self.pkg_name}",
-            "REV": f"{self.QUILT_PREFIX}/{self.pkg_name}?{self.REVISE}",
+            "QUILT_URI": f"quilt+s3://{self.DST_BUCKET}#package={self.pkg_name}",
+            "CATALOG_URL": f"{self.QUILT_PREFIX}/{self.pkg_name}",
+            "REVISE_URL": f"{self.QUILT_PREFIX}/{self.pkg_name}?{self.REVISE}",
         }
-        return {f: values.get(k) for k, f in self.FLD.items()}
+        return {f: values.get(k) for k, f in self.FIELDS.items()}
 
     def update_benchling_notebook(self) -> bool:
         values = self.field_values()

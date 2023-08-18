@@ -37,7 +37,7 @@ the lambda will also back-update the Benchling notebook entry with the following
 You will need access to both the AWS Console and Benchling Admin Console to complete the configuration.
 You will also need:
 
-- Your Benchling tenant domain
+- Your Benchling tenant domain (e.g., `<YOUR_TENANT>` from `<YOUR_TENANT>.benchling.com`)
 - Your AWS Account ID (e.g. 12345689123)
 - The AWS Region (e.g., us-west-2) you want to process events in
 - An Event Bus Name (e.g., quilt-integration)
@@ -166,4 +166,4 @@ Within minutes the package will be created and the entry fields will be
 updated with links to this package.
 
 > To refresh Quilt package from entry again you have to update `Sentinel`
-field with arbitrary value.
+field with a different value.
