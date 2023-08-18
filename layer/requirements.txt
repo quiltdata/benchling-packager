@@ -39,7 +39,7 @@ cffi==1.15.1
     # via cryptography
 charset-normalizer==3.1.0
     # via requests
-cryptography==41.0.1
+cryptography==41.0.3
     # via jwcrypto
 dataclasses-json==0.5.8
     # via
@@ -47,8 +47,6 @@ dataclasses-json==0.5.8
     #   benchling-sdk
 deprecated==1.2.14
     # via jwcrypto
-exceptiongroup==1.1.1
-    # via anyio
 h11==0.14.0
     # via httpcore
 httpcore==0.17.2
@@ -90,6 +88,8 @@ packaging==23.1
     # via marshmallow
 platformdirs==3.5.3
     # via quilt3
+psutil==5.9.5
+    # via benchling-sdk
 pycparser==2.21
     # via cffi
 pyrsistent==0.19.3
