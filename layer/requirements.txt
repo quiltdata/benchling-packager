@@ -47,8 +47,6 @@ dataclasses-json==0.5.8
     #   benchling-sdk
 deprecated==1.2.14
     # via jwcrypto
-exceptiongroup==1.1.1
-    # via anyio
 h11==0.14.0
     # via httpcore
 httpcore==0.17.2
@@ -90,6 +88,8 @@ packaging==23.1
     # via marshmallow
 platformdirs==3.5.3
     # via quilt3
+psutil==5.9.6
+    # via benchling-sdk
 pycparser==2.21
     # via cffi
 pyrsistent==0.19.3
@@ -135,7 +135,7 @@ typing-extensions==4.6.3
     #   typing-inspect
 typing-inspect==0.9.0
     # via dataclasses-json
-urllib3==1.26.16
+urllib3==1.26.18
     # via
     #   botocore
     #   requests
