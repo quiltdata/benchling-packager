@@ -109,7 +109,7 @@ typing-extensions==4.7.1
     # via
     #   aws-sam-translator
     #   pydantic
-urllib3==1.26.16
+urllib3==1.26.18
     # via
     #   botocore
     #   requests
