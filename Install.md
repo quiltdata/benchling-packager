@@ -112,6 +112,17 @@ This takes you to the app settings page.
 NOTE: You do NOT need to explicitly add the app to your tenant,
 since it was already created there.
 
+#### 3.3 Add App to the Organization
+
+Admins can add apps in the organization page in the “APPS” tab:
+
+1. Profile -> Tenant Admin Console -> Organizations
+2. Select the organization you want to add the app to
+3. Click “Apps” tab
+4. Type the name of your app in "Search for an app"
+5. Click “Add App”
+6. Select the app you want to add
+
 ### 4. Create CloudFormation stack
 
 1. Download CloudFormation template [here](benchling_packager.yaml)
@@ -137,7 +148,7 @@ since it was already created there.
 1. Under `Resources` tab of CloudFormation stack find `BenchlingClientSecret` and
 click on its Physical ID.
 2. Click `Retrieve secret value` and then `Set secret value`.
-3. Enter client Secret from settings of app generated at step 2.
+3. Enter as plaintext value the Client Secret from the app generated at step 2.
 
 ### 5. Create/update Entry schema
 
