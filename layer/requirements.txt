@@ -12,7 +12,7 @@ attrs==22.2.0
     #   benchling-sdk
     #   jsonschema
 aws-lambda-powertools==2.16.2
-    # via -r requirements.in
+    # via -r layer/requirements.in
 aws-requests-auth==0.4.3
     # via quilt3
 backoff==1.11.1
@@ -22,7 +22,7 @@ backoff==1.11.1
 benchling-api-client==2.0.167
     # via benchling-sdk
 benchling-sdk==1.7.0
-    # via -r requirements.in
+    # via -r layer/requirements.in
 boto3==1.26.151
     # via quilt3
 botocore==1.29.151
@@ -39,7 +39,7 @@ cffi==1.15.1
     # via cryptography
 charset-normalizer==3.1.0
     # via requests
-cryptography==41.0.1
+cryptography==41.0.6
     # via jwcrypto
 dataclasses-json==0.5.8
     # via
@@ -63,7 +63,7 @@ idna==3.4
     #   httpx
     #   requests
 jinja2==3.1.2
-    # via -r requirements.in
+    # via -r layer/requirements.in
 jmespath==1.0.1
     # via
     #   boto3
@@ -104,7 +104,7 @@ pyyaml==6.0
     #   benchling-sdk
     #   quilt3
 quilt3==5.3.1
-    # via -r requirements.in
+    # via -r layer/requirements.in
 requests==2.31.0
     # via
     #   aws-requests-auth
