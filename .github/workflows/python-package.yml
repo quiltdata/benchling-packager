@@ -34,8 +34,6 @@ jobs:
       run: |
         make test TEST_OS=${{ matrix.os }}
       env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           BENCHLING_TENANT: ${{ secrets.BENCHLING_TENANT }}
           BENCHLING_CLIENT_ID: ${{ secrets.BENCHLING_CLIENT_ID }}
           BENCHLING_CLIENT_SECRET_ARN: ${{ secrets.BENCHLING_CLIENT_SECRET_ARN }}
