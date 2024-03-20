@@ -24,7 +24,7 @@ benchling-api-client==2.0.167
     # via benchling-sdk
 benchling-sdk==1.7.0
     # via -r dev-requirements.in
-black==23.7.0
+black==24.3.0
     # via -r dev-requirements.in
 boto3==1.28.27
     # via quilt3
