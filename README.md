@@ -1,11 +1,14 @@
 # benchling-packager
 
-This repository generates a CloudFormation template for processing
-[Benchling](https://benchling.com/) events in order create
-(and link, if possible) a [Quilt](https://quiltdata.com/)
-package for every Benchling notebook.
+The Benchling Packager is a lambda you can deploy in your own AWS private cloud to process
+[Benchling](https://benchling.com/) events in order to create (and link back, if possible)
+a dedicated [Quilt](https://quiltdata.com/) package for every Benchling notebook.
 
-The code in this repository is open source under the [Apache 2.0 license](./LICENSE.txt).
+The CloudFormation template is available on
+[open.quiltdata.com](https://open.quiltdata.com/b/quilt-example/packages/examples/benchling-packager).
+
+This repository contains the source code for generating that template.
+It is open source under the [Apache 2.0 license](./LICENSE.txt).
 
 ## Template generation
 
