@@ -147,8 +147,9 @@ Admins can add apps in the organization page in the “APPS” tab:
 
 1. Under `Resources` tab of CloudFormation stack find `BenchlingClientSecret` and
 click on its Physical ID.
-2. Click `Retrieve secret value` and then `Set secret value`.
-3. Enter as plaintext value the Client Secret from the app generated at step 2.
+2. Click `Retrieve secret value`
+3. Click `Set secret value` (or "Edit" if it is already set)
+4. Enter as "Plaintext" the Client Secret ("cs_XXX") from the app generated at step 2
 
 ### 5. Create/update Entry schema
 
